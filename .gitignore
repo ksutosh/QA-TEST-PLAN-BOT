@@ -1,0 +1,21 @@
+# Virtual environment
+venv/
+
+# Python cache files
+__pycache__/
+*.pyc
+
+# Environment variables / secrets
+.env
+
+# Log files
+logs/
+
+# Generated output files
+output/
+
+# VS Code local settings
+.vscode/
+
+# OS files
+.DS_Store
