@@ -37,5 +37,11 @@ def build_slack_files_context(
 
     body = "\n\n".join(blocks).strip()
 
+    for item in with_text:
+        logger.info(
+            "Attachment in prompt: %s (%s chars)",
+            item["name"],
+            len(item.get("text", "")),
+        )
     logger.info("Context: %s Slack attachment(s) with extractable text", len(with_text))
     return "--- Slack thread attachments ---\n" + body

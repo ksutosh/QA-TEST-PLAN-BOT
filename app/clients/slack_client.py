@@ -188,8 +188,10 @@ def download_thread_file_texts(
 
     Each result dict has keys: name, text (optional), skipped_reason (optional).
     """
+    file_list = collect_thread_files(messages)
+    logger.info("Found %s unique file attachment(s) in thread", len(file_list))
     results: List[Dict[str, str]] = []
-    for file_obj in collect_thread_files(messages):
+    for file_obj in file_list:
         try:
             meta = _resolve_file_metadata(
                 bot_token, file_obj, timeout_seconds=timeout_seconds

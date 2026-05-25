@@ -16,6 +16,10 @@ def _merge_sections(sections: List[str]) -> Optional[str]:
     return "\n\n".join(parts)
 
 
+def _log_section(label: str, content: str) -> None:
+    logger.info("Context section %s: %s chars", label, len(content))
+
+
 def resolve_context(
     mention_text: str,
     slack_text: str,
@@ -25,26 +29,33 @@ def resolve_context(
     """
     Gather LLM prompt context from all detected sources.
 
-    Policy: Confluence link body, thread file attachments, then JIRA + Slack text.
+    Order: attachments first (primary spec), then JIRA/Slack, then Confluence.
     """
     sections: List[str] = []
-
-    confluence_ctx = build_confluence_context(mention_text, slack_text, settings)
-    if confluence_ctx:
-        sections.append(confluence_ctx)
-        logger.info("Context: Confluence section added")
 
     if thread_messages:
         files_ctx = build_slack_files_context(thread_messages, settings)
         if files_ctx:
             sections.append(files_ctx)
+            _log_section("slack_attachments", files_ctx)
 
     jira_slack_ctx = build_jira_slack_context(mention_text, slack_text, settings)
     if jira_slack_ctx:
         sections.append(jira_slack_ctx)
-        logger.info("Context: JIRA/Slack section added")
+        _log_section("jira_slack", jira_slack_ctx)
+
+    confluence_ctx = build_confluence_context(mention_text, slack_text, settings)
+    if confluence_ctx:
+        sections.append(confluence_ctx)
+        _log_section("confluence", confluence_ctx)
 
     merged = _merge_sections(sections)
     if merged:
-        logger.info("Resolved context length=%s chars", len(merged))
+        logger.info(
+            "Resolved context: %s section(s), total %s chars",
+            len(sections),
+            len(merged),
+        )
+    else:
+        logger.warning("Resolved context is empty (no sections)")
     return merged
