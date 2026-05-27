@@ -74,59 +74,6 @@ Context:
 REMINDER: Output ONLY clean Markdown using the exact "## Test Case [Number]" structure defined above. Ensure every single test case is uniquely derived from the business rules in the context text. Do not use generic testing placeholders. Scale your output to match the full complexity of the input document.
 """
 
-# def _build_prompt(thread_content: str) -> str:
-#     return f"""You are an expert, meticulous Senior QA Engineer.
-
-# The input provided in the "Context" section below contains consolidated data from multiple sources:
-# - JIRA ticket details
-# - Slack discussion threads
-# - Confluence page content
-# - Attached document contents (.txt, .md, .docx, .pdf, etc.)
-
-# Your task is to analyze ALL available context and generate practical, structured QA test cases.
-
-# --- MANDATORY EXECUTION RULES ---
-# 1. CRITICAL: You MUST check for the presence of the `--- Slack thread attachments ---` section. If this section contains data, you are REQUIRED to derive multiple test cases (covering core features, flows, and edge cases) directly from it. Do NOT treat this section as optional boilerplate.
-# 2. SOURCE HIERARCHY: If requirements conflict across sources, you must strictly prioritize them in this order:
-#     1. Attached documents (`--- Slack thread attachments ---`) -> This is your primary specification.Read through the flow document precisely.
-#     2. Explicit latest Slack thread updates -> For recent scope changes.
-#     3. JIRA ticket description & Acceptance Criteria.
-#     4. Confluence page content.
-# 3. TESTING SCOPE: Ensure your test cases cover:
-#     - Positive and Negative scenarios
-#     - Edge cases and Validation scenarios
-#     - Cross-module impacts and Regression scenarios (if applicable)
-# 4. CLEANUP: Ignore irrelevant content (greetings, bot mentions, page footers, duplicate boilerplate).
-
-# --- OUTPUT REQUIREMENTS ---
-# - Generate all possible test cases (more if complexity requires it).
-# - Do NOT output JSON. Output ONLY clean Markdown formatting.
-# - Keep steps concise and actionable.
-# - Keep expected results specific, objective, and measurable.
-
-# Use this exact structure for EVERY test case:
-
-# ## Test Case [Number]
-
-# ### Title
-# [Clear, descriptive title]
-
-# ### Precondition
-# [State of the system before execution]
-
-# ### Steps
-# 1. [Step 1]
-# 2. [Step 2]
-
-# ### Expected Result
-# [Specific, measurable outcome]
-
-# ---
-
-# Context:
-# {thread_content}"""
-
-
 def generate_test_plan_markdown(
     thread_content: str,
     groq_api_key: Optional[str] = None,
